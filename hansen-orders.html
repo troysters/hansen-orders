@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>M&M Ice — Hansen Orders</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f1f5f9;
+  --surface: #ffffff;
+  --surface2: #f1f5f9;
+  --surface3: #e2e8f0;
+  --border: #cbd5e1;
+  --ice: #0369a1;
+  --ice2: #0284c7;
+  --ice-dim: #bae6fd;
+  --text: #0f172a;
+  --text-dim: #475569;
+  --text-faint: #94a3b8;
+  --red: #dc2626;
+  --red-bg: #fee2e2;
+  --amber: #92400e;
+  --amber-bg: #fef3c7;
+  --green: #16a34a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Manrope', sans-serif;
+  min-height: 100vh;
+  font-size: 14px;
+}
+
+/* ─── HEADER ─── */
+header {
+  background: var(--surface);
+  border-bottom: 2px solid var(--ice-dim);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 10px;
+}
+.logo-block { display: flex; flex-direction: column; line-height: 1; }
+.logo-main {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 3px;
+  color: var(--ice);
+}
+.logo-sub {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+.header-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.last-updated { font-size: 11px; color: var(--text-dim); font-family: 'DM Mono', monospace; display: none; }
+.last-updated.visible { display: block; }
+
+button {
+  font-family: 'Manrope', sans-serif;
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  font-size: 12px;
+  border-radius: 6px;
+  padding: 7px 12px;
+  transition: all 0.15s;
+}
+.btn-ice {
+  background: var(--ice-dim);
+  color: var(--ice);
+  border: 1px solid var(--ice-dim);
+}
+.btn-ice:hover { background: #2a5f9e; }
+.btn-ice:active { transform: scale(0.97); }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { color: var(--text); border-color: var(--text-dim); }
+.btn-icon { font-size: 16px; padding: 7px 10px; }
+.spin { display: inline-block; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── SETUP SCREEN ─── */
+#setup-screen {
+  display: none;
+  max-width: 560px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+#setup-screen.active { display: block; }
+.setup-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+}
+.setup-card h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 2px;
+  color: var(--ice);
+  margin-bottom: 6px;
+}
+.setup-card p { color: var(--text-dim); line-height: 1.6; margin-bottom: 20px; font-size: 13px; }
+.steps {
+  counter-reset: step;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.step {
+  counter-increment: step;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+.step::before {
+  content: counter(step);
+  background: var(--ice-dim);
+  color: var(--ice);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  min-width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: 0;
+}
+.step strong { color: var(--text); }
+.step code {
+  background: var(--surface3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--ice);
+  word-break: break-all;
+}
+label { display: block; font-size: 12px; font-weight: 700; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+input[type="text"] {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.15s;
+  margin-bottom: 12px;
+}
+input[type="text"]:focus { border-color: var(--ice2); }
+.setup-error { color: var(--red); font-size: 12px; margin-bottom: 10px; display: none; }
+.setup-error.visible { display: block; }
+.btn-load {
+  background: var(--ice2);
+  color: #06111f;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 11px 20px;
+  border-radius: 8px;
+  width: 100%;
+  letter-spacing: 0.5px;
+}
+.btn-load:hover { background: var(--ice); }
+
+/* ─── MAIN CONTENT ─── */
+#main-content { display: none; padding: 0 0 40px; }
+#main-content.active { display: block; }
+
+/* ─── FILTERS ─── */
+.filters {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.filter-label { font-size: 11px; color: var(--text-faint); letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
+.filter-btn {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  padding: 5px 12px;
+  font-size: 12px;
+  border-radius: 20px;
+}
+.filter-btn.active {
+  background: var(--ice-dim);
+  color: var(--ice);
+  border-color: var(--ice-dim);
+}
+.filter-btn:hover:not(.active) { border-color: var(--text-dim); color: var(--text); }
+
+
+/* ─── ORDER GROUPS ─── */
+.orders-container { padding: 16px; display: flex; flex-direction: column; gap: 24px; }
+
+.date-group { display: flex; flex-direction: column; gap: 10px; }
+
+.date-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  position: sticky;
+  top: 55px;
+  z-index: 50;
+}
+.date-header-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: var(--text);
+  flex: 1;
+}
+.date-header-label .day-name { color: var(--ice); }
+.date-header-label .past-tag {
+  font-family: 'Manrope', sans-serif;
+  font-size: 10px;
+  color: var(--text-faint);
+  background: var(--surface3);
+  padding: 2px 7px;
+  border-radius: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  vertical-align: middle;
+  margin-left: 6px;
+  font-weight: 700;
+}
+.date-header-label .today-tag {
+  font-family: 'Manrope', sans-serif;
+  font-size: 10px;
+  color: var(--green);
+  background: rgba(74, 222, 128, 0.1);
+  padding: 2px 7px;
+  border-radius: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  vertical-align: middle;
+  margin-left: 6px;
+  font-weight: 700;
+}
+.date-totals {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.total-chip {
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--ice);
+  white-space: nowrap;
+}
+.total-chip span { color: var(--text-dim); }
+
+/* ─── ORDER CARD ─── */
+.order-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  animation: fadeUp 0.2s ease;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.order-card:hover { border-color: var(--ice-dim); }
+
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.store-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--ice);
+  letter-spacing: 1px;
+  min-width: 48px;
+  line-height: 1;
+}
+.store-info { flex: 1; min-width: 0; }
+.store-name { font-weight: 700; font-size: 14px; color: var(--text); }
+.store-contact { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+.store-contact span { color: var(--text-faint); margin-right: 4px; }
+.order-time { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-faint); text-align: right; flex-shrink: 0; }
+
+.card-qtys {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+.qty-block {
+  flex: 1;
+  padding: 10px 12px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.qty-block:last-child { border-right: none; }
+.qty-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 1px;
+  line-height: 1;
+  color: var(--text);
+}
+.qty-num.zero { color: var(--text-faint); }
+.qty-lbl { font-size: 10px; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; text-align: center; }
+.qty-sub { font-size: 10px; color: var(--text-faint); font-family: 'DM Mono', monospace; }
+
+.card-notes {
+  padding: 9px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  background: var(--amber-bg);
+}
+.card-notes .note-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+
+.card-damage {
+  padding: 9px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--red);
+  background: var(--red-bg);
+  flex-wrap: wrap;
+}
+.damage-icon { font-size: 13px; flex-shrink: 0; }
+.damage-item { margin-right: 10px; }
+
+/* ─── COMPLETED SECTION ─── */
+.completed-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 2px solid rgba(74,222,128,0.2);
+}
+.completed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  color: var(--green);
+  opacity: 0.7;
+}
+.completed-count {
+  font-family: 'Manrope', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: rgba(74,222,128,0.1);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.all-done-msg {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--green);
+}
+.all-done-msg .big {
+  font-size: 56px;
+  margin-bottom: 8px;
+}
+.all-done-msg p {
+  font-size: 16px;
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+/* ─── DELIVERED STATE ─── */
+.order-card.delivered {
+  opacity: 0.5;
+  border-color: var(--green);
+}
+.order-card.delivered .card-top { border-bottom-color: rgba(74,222,128,0.2); }
+.delivered-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(74,222,128,0.08);
+  border-top: 1px solid rgba(74,222,128,0.2);
+  font-size: 12px;
+  color: var(--green);
+  font-weight: 600;
+}
+.delivered-badge .undo-btn {
+  margin-left: auto;
+  font-size: 12px;
+  color: #dc2626;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+}
+.delivered-badge .undo-btn:hover { background: #fecaca; }
+.deliver-btn {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  font-family: 'Manrope', sans-serif;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.deliver-btn:hover { background: rgba(74,222,128,0.08); color: var(--green); }
+.deliver-btn:active { transform: scale(0.98); }
+.sync-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--amber); display: inline-block;
+  margin-left: 6px; vertical-align: middle;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ─── EMPTY / ERROR ─── */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-faint);
+}
+.empty-state .big { font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: var(--surface3); letter-spacing: 3px; margin-bottom: 8px; }
+.empty-state p { font-size: 13px; }
+
+.error-banner {
+  background: var(--red-bg);
+  border: 1px solid #5a1a1a;
+  color: var(--red);
+  padding: 12px 16px;
+  margin: 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  display: none;
+}
+.error-banner.visible { display: block; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 420px) {
+  .qty-num { font-size: 22px; }
+  .store-num { font-size: 24px; min-width: 40px; }
+  .date-header { top: 52px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-block">
+    <div class="logo-main">M&amp;M Ice</div>
+    <div class="logo-sub">Hansen Orders</div>
+  </div>
+  <div class="header-right">
+    <div class="last-updated" id="last-updated"></div>
+    <button class="btn-ice btn-icon" id="btn-refresh" title="Refresh orders" onclick="loadOrders()" style="display:none">↻</button>
+    <button class="btn-ghost" id="btn-settings" onclick="showSetup()">⚙ Setup</button>
+  </div>
+</header>
+
+<!-- SETUP SCREEN -->
+<div id="setup-screen">
+  <div class="setup-card">
+    <h2>Connect Your Sheet</h2>
+    <p>Follow these steps to connect the Hansen IGA Google Sheet to this dashboard.</p>
+    <div class="steps">
+      <div class="step"><div><strong>Open the Google Sheet</strong> in Google Drive, then click <strong>File → Share → Publish to web</strong></div></div>
+      <div class="step"><div>Under "Link", select the correct sheet tab, change the format dropdown to <strong>Comma-separated values (.csv)</strong>, then click <strong>Publish</strong></div></div>
+      <div class="step"><div>Copy the URL it gives you — it will look like:<br><code>https://docs.google.com/spreadsheets/d/…/pub?gid=0&single=true&output=csv</code></div></div>
+      <div class="step"><div>Paste that URL below and click Load</div></div>
+    </div>
+    <label for="csv-url">Published CSV URL</label>
+    <input type="text" id="csv-url" placeholder="https://docs.google.com/spreadsheets/d/…/pub?output=csv">
+    <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
+      <p style="margin-bottom:12px">Optionally, connect a Google Apps Script to mark deliveries back to the sheet. See instructions at the bottom of this screen.</p>
+      <label for="script-url">Apps Script Web App URL <span style="color:var(--text-faint);font-weight:400;text-transform:none">(optional)</span></label>
+      <input type="text" id="script-url" placeholder="https://script.google.com/macros/s/…/exec">
+    </div>
+    <div class="setup-error" id="setup-error"></div>
+    <button class="btn-load" onclick="saveAndLoad()">Save & Load</button>
+    <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border)">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--ice);margin-bottom:12px">Apps Script Setup (for delivery confirmation)</div>
+      <div class="steps">
+        <div class="step"><div>Open the Google Sheet → click <strong>Extensions → Apps Script</strong></div></div>
+        <div class="step"><div>Delete any existing code and paste in the script from the <strong>hansen-script.gs</strong> file provided</div></div>
+        <div class="step"><div>Click <strong>Deploy → New deployment</strong> → type: <strong>Web app</strong> → Execute as: <strong>Me</strong> → Who has access: <strong>Anyone</strong> → click Deploy</div></div>
+        <div class="step"><div>Copy the Web App URL and paste it above</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+  <div class="filters">
+    <span class="filter-label">Show:</span>
+    <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+    <button class="filter-btn" onclick="setFilter('today', this)">Today</button>
+    <button class="filter-btn" onclick="setFilter('tomorrow', this)">Tomorrow</button>
+    <button class="filter-btn" onclick="setFilter('this-week', this)">This Week</button>
+    <button class="filter-btn" onclick="setFilter('completed', this)">Completed</button>
+  </div>
+  <div class="error-banner" id="error-banner"></div>
+  <div class="orders-container" id="orders-container"></div>
+</div>
+
+<script>
+const STORAGE_KEY = 'hansen_csv_url';
+let allOrders = [];
+let currentFilter = 'all';
+
+const DEMO_TSV = `Timestamp	Email Address	Store Location	Who is placing this order?	Preferred Delivery Date	Quantity - 20lb Bags	Quantity - 7lb Bags	Delivery Notes / Special Instructions	Quantity- 10lb Block	Damaged - 20lb Bags (Refund)	Damaged - 7lb Bags (Refund)	Damaged - 10lb Block (Refund)
+4/4/2026 10:03:18	hansspdairy@hansensiga.com	Store #07 - Sparta - Wednesday Delivery (minimum order: 1 pallet)	Adam Albertson	4/8/2026	120 Bags (Full Pallet)	348 Bags (Full Pallet)		0
+4/6/2026 10:40:20	hanseldairy@hansensiga.com	Store #05 - Elroy - Wednesday Delivery (minimum order: 1 pallet)	Dawn Garrity	4/8/2026	60 Bags (.5)	174 Bags (.5)
+4/16/2026 12:48:47	hansbrf@hansensiga.com	Store #10 - Black River Falls - Tuesday Delivery (minimum order: 1 pallet)	Tatum	4/21/2026	240 Bags (2)	174 Bags (.5)
+4/17/2026 7:31:12	hanswsdairy@hansensiga.com	Store #02 - West Salem - Wednesday Delivery (minimum order: 1 pallet)	Samantha Siber	4/22/2026	60 Bags (.5)	174 Bags (.5)
+4/18/2026 8:01:18	hanselkdairy@hansensiga.com	Store #14 - Elkhorn - Monday / Friday Deliveries (minimum order: 2 pallet)	Steven Knutson	4/20/2026	120 Bags (1)	348 Bags (1)	Pallets are to be placed in the Meat freezer
+4/18/2026 16:20:22	hansetr@hansensiga.com	Store #13 - East Troy - Monday / Friday Deliveries (minimum order: 2 pallet)	Camden	4/20/2026	120 Bags (1)	348 Bags (1)
+4/21/2026 11:12:37	hanscash@hansensiga.com	Store #04 - Cashton - Wednesday Delivery (minimum order: 1 pallet)	tim kast	4/22/2026	120 Bags (1)
+4/24/2026 9:12:57	hanswby@hansensiga.com	Store #03 - Westby - Wednesday Delivery (minimum order: 1 pallet)	Kelsey Edmison	4/29/2026	60 Bags (.5)	174 Bags (.5)
+4/28/2026 10:41:48	TMH-StoreDirector@hansensiga.com	Store #15 - Tomah - Wednesday Delivery (minimum order: 1 pallet)	Connor	4/28/2026	60 Bags (.5)	174 Bags (.5)	Attention Christine
+4/28/2026 16:15:55	ba-asd@hansensiga.com	Store #01 - Bangor - Wednesday Delivery (minimum order: 1 pallet)	Nick Hickok	4/29/2026	60 Bags (.5)	174 Bags (.5)	Find Corrie (store manager) or Tim (Warehouse Manager) for freezer location
+4/29/2026 12:08:00	hanspds@hansensiga.com	Store #12 - Prairie du Sac - Thursday Delivery (minimum order: 1 pallet)	Tacoya Hudson	4/30/2026		348 Bags (1)			3	1
+5/1/2026 9:27:32	hanseldairy@hansensiga.com	Store #05 - Elroy - Wednesday Delivery (minimum order: 1 pallet)	Dawn	5/13/2026	120 Bags (1)
+5/1/2026 13:13:19	hanselkdairy@hansensiga.com	Store #14 - Elkhorn - Monday / Friday Deliveries (minimum order: 2 pallet)	steven	5/8/2026	120 Bags (1)	348 Bags (1)
+5/3/2026 7:56:24	hansetr@hansensiga.com	Store #13 - East Troy - Monday / Friday Deliveries (minimum order: 2 pallet)	Camden	5/8/2026	120 Bags (1)	348 Bags (1)
+5/4/2026 8:40:50	hansnv@hansensiga.com	Store #06 - Neilsville - Tuesday Delivery (minimum order: 1 pallet)	Merlin	5/12/2026	60 Bags (.5)	174 Bags (.5)	Please wait to delivery this until 5/12 as we do not have the space available to store what doesn't fit in the ice merchandiser yet.
+5/5/2026 14:42:46	hanswsdairy@hanensiga.com	Store #02 - West Salem - Wednesday Delivery (minimum order: 1 pallet)	Sam Siber	5/6/2026		348 Bags (1)
+5/6/2026 10:58:53	hanspds@hansensiga.com	Store #12 - Prairie du Sac - Thursday Delivery (minimum order: 1 pallet)	Tacoya Hudson	5/7/2026	120 Bags (1)
+5/12/2026 7:54:36	hanswby@hansensiga.com	Store #03 - Westby - Wednesday Delivery (minimum order: 1 pallet)	Kelsey	5/13/2026	60 Bags (.5)	174 Bags (.5)
+5/12/2026 7:56:27	hanscash@hansensiga.com	Store #04 - Cashton - Wednesday Delivery (minimum order: 1 pallet)	tim kast	5/13/2026	120 Bags (1)
+5/13/2026 8:34:39	hansbrf@hansensiga.com	Store #10 - Black River Falls - Tuesday Delivery (minimum order: 1 pallet)	Tatum - Store Director	5/19/2026	60 Bags (.5)	348 Bags (1)		25
+5/13/2026 9:25:08	hansetr@hansensiga.com	Store #13 - East Troy - Monday / Friday Deliveries (minimum order: 2 pallet)	Camden Roach	5/18/2026	240 Bags (2)	696 Bags (2)		25
+5/13/2026 10:26:33	tmh-storedirector@hansensiga.com	Store #15 - Tomah - Wednesday Delivery (minimum order: 1 pallet)	Connor	5/14/2026	60 Bags (.5)	174 Bags (.5)
+5/13/2026 13:06:15	hanselkdairy@hansensiga.com	Store #14 - Elkhorn - Monday / Friday Deliveries (minimum order: 2 pallet)	Steven	5/18/2026	120 Bags (1)	348 Bags (1)		25
+5/14/2026 7:54:08	Hanseldairy@hansensiga.com	Store #05 - Elroy - Wednesday Delivery (minimum order: 1 pallet)	Dawn	5/21/2026			3 bags
+5/15/2026 12:00:23	hanswsdairy@hansensiga.com	Store #02 - West Salem - Wednesday Delivery (minimum order: 1 pallet)	Sam Siber	5/20/2026	120 Bags (1)			25
+5/18/2026 6:50:41	hansnv@hansensiga.com	Store #06 - Neilsville - Tuesday Delivery (minimum order: 1 pallet)	Merlin Hemp	5/19/2026	120 Bags (1)			25
+5/18/2026 7:17:08	hansspdairy@hansensiga.com	Store #07 - Sparta - Wednesday Delivery (minimum order: 1 pallet)	Ice order	5/20/2026	120 Bags (1)	174 Bags (.5)		15	2	3	0
+5/18/2026 12:45:10	hanspds@hansensiga.com	Store #12 - Prairie du Sac - Thursday Delivery (minimum order: 1 pallet)	tim	5/21/2026	120 Bags (1)			25
+5/19/2026 14:45:15	hanswby@hansensiga.com	Store #03 - Westby - Wednesday Delivery (minimum order: 1 pallet)	Kelsey	5/20/2026	60 Bags (.5)	164 Bags (.5)		25
+5/19/2026 16:23:08	ba-asd@hansens.com	Store #01 - Bangor - Wednesday Delivery (minimum order: 1 pallet)	Nick	5/20/2026	120 Bags (1)`;
+
+// ── SAFE STORAGE ─────────────────────────────────────────
+function storageGet(k) { try { return localStorage.getItem(k); } catch(e) { return null; } }
+function storageSet(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
+
+// ── INIT ──────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = storageGet(STORAGE_KEY);
+  if (saved) {
+    document.getElementById('csv-url').value = saved;
+    const savedScript = storageGet('hansen_script_url');
+    if (savedScript) document.getElementById('script-url').value = savedScript;
+    loadOrders();
+  } else {
+    loadDemo();
+  }
+});
+
+async function loadDemo(isFallback) {
+  try {
+    allOrders = parseSheet(DEMO_TSV);
+    await syncCompletedFromSheet();
+  } catch(e) {
+    document.body.innerHTML = '<div style="color:red;padding:20px;font-family:monospace">parseSheet ERROR: ' + e + '</div>';
+    return;
+  }
+  showMain();
+  const dbg = document.getElementById('orders-container');
+  if (!dbg) {
+    document.body.innerHTML = '<div style="color:red;padding:20px;font-family:monospace">orders-container NOT FOUND</div>';
+    return;
+  }
+  dbg.innerHTML = '<div style="color:lime;padding:20px;font-family:monospace">Parsed ' + allOrders.length + ' orders. Rendering...</div>';
+  try {
+    renderOrders();
+  } catch(e) {
+    dbg.innerHTML = '<div style="color:red;padding:20px;font-family:monospace">renderOrders ERROR: ' + e + '<br>' + e.stack + '</div>';
+    return;
+  }
+  const ts = document.getElementById('last-updated');
+  if (ts) {
+    ts.textContent = isFallback ? 'Live sheet unavailable — showing demo data' : 'Demo data (no live sheet connected)';
+    ts.classList.add('visible');
+  }
+}
+
+// ── SETUP / NAV ───────────────────────────────────────────
+function showSetup() {
+  document.getElementById('setup-screen').classList.add('active');
+  document.getElementById('main-content').classList.remove('active');
+}
+function showMain() {
+  document.getElementById('setup-screen').classList.remove('active');
+  document.getElementById('main-content').classList.add('active');
+  document.getElementById('btn-refresh').style.display = '';
+}
+function saveAndLoad() {
+  const url = document.getElementById('csv-url').value.trim();
+  const err = document.getElementById('setup-error');
+  if (!url.includes('docs.google.com/spreadsheets')) {
+    err.textContent = 'Please enter a valid Google Sheets published CSV URL.';
+    err.classList.add('visible');
+    return;
+  }
+  err.classList.remove('visible');
+  storageSet(STORAGE_KEY, url);
+  const scriptUrl = document.getElementById('script-url').value.trim();
+  storageSet('hansen_script_url', scriptUrl);
+  loadOrders();
+}
+
+// ── LOAD ──────────────────────────────────────────────────
+async function loadOrders() {
+  const url = storageGet(STORAGE_KEY);
+  if (!url) { showSetup(); return; }
+
+  const btn = document.getElementById('btn-refresh');
+  btn.innerHTML = '<span class="spin">↻</span>';
+  btn.disabled = true;
+  document.getElementById('error-banner').classList.remove('visible');
+
+  try {
+    // Proxy through Cloudflare Worker to avoid CORS block
+    const proxyUrl = 'https://hansen-orders.troysters.workers.dev/sheet-proxy?url=' + encodeURIComponent(url);
+    const resp = await fetch(proxyUrl);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const text = await resp.text();
+    allOrders = parseSheet(text);
+    showMain();
+    await syncCompletedFromSheet();
+    renderOrders();
+    const now = new Date();
+    const ts = document.getElementById('last-updated');
+    ts.textContent = 'Updated ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    ts.classList.add('visible');
+  } catch(e) {
+    // Fall back to demo data so the app is still usable
+    if (allOrders.length === 0) {
+      loadDemo(true);
+    } else {
+      const ts = document.getElementById('last-updated');
+      if (ts) { ts.textContent = 'Refresh failed'; ts.classList.add('visible'); }
+    }
+  } finally {
+    btn.innerHTML = '↻';
+    btn.disabled = false;
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-banner');
+  el.textContent = msg;
+  el.classList.add('visible');
+  showMain();
+}
+
+// ── CSV PARSER ────────────────────────────────────────────
+function parseCSV(text) {
+  const rows = [];
+  const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const cols = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (c === '"') {
+        if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+        else inQ = !inQ;
+      } else if (c === ',' && !inQ) {
+        cols.push(cur.trim()); cur = '';
+      } else cur += c;
+    }
+    cols.push(cur.trim());
+    rows.push(cols);
+  }
+  return rows;
+}
+
+// Also handle tab-separated as fallback
+function parseSheet(text) {
+  const hasTabs = text.split('\n')[0].split('\t').length > 5;
+  let rows;
+  if (hasTabs) {
+    rows = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n').map(l => l.split('\t').map(c => c.trim())).filter(r => r.length > 2 && r[0]);
+  } else {
+    rows = parseCSV(text);
+  }
+
+  if (rows.length < 2) return [];
+  const data = rows.slice(1); // skip header
+
+  const orders = [];
+  for (const r of data) {
+    if (!r[0] || r[0].toLowerCase() === 'timestamp') continue;
+    const order = {
+      timestamp:   r[0]  || '',
+      email:       r[1]  || '',
+      location:    r[2]  || '',
+      contact:     r[3]  || '',
+      delivDate:   r[4]  || '',
+      qty20:       parseQty(r[5]),
+      qty7:        parseQty(r[6]),
+      notes:       r[7]  || '',
+      qty10:       parseQty(r[8]),
+      dmg20:       parseQty(r[9]),
+      dmg7:        parseQty(r[10]),
+      dmg10:       parseQty(r[11]),
+    };
+    order.parsedDelivDate = parseDate(order.delivDate);
+    order.parsedTimestamp  = parseDate(order.timestamp);
+    const loc = parseLocation(order.location);
+    order.storeNum  = loc.num;
+    order.storeName = loc.name;
+    order.delivDay  = loc.day;
+    if (order.parsedDelivDate) orders.push(order);
+  }
+  // Sort by delivery date asc, then by store num
+  orders.sort((a, b) => a.parsedDelivDate - b.parsedDelivDate || a.storeNum - b.storeNum);
+  return orders;
+}
+
+function parseQty(s) {
+  if (!s) return 0;
+  const m = s.match(/^(\d+)/);
+  return m ? parseInt(m[1]) : 0;
+}
+
+function parseDate(s) {
+  if (!s) return null;
+  // M/D/YYYY or M/D/YYYY H:MM:SS
+  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (!m) return null;
+  return new Date(parseInt(m[3]), parseInt(m[1])-1, parseInt(m[2]));
+}
+
+function parseLocation(s) {
+  // "Store #07 - Sparta - Wednesday Delivery ..."
+  // "Store #14 - Elkhorn - Monday / Friday Deliveries ..."
+  const m = s.match(/Store\s*#?(\d+)\s*[-–]\s*([^-–]+?)\s*[-–]/i);
+  if (m) {
+    const num = parseInt(m[1]);
+    const name = m[2].trim();
+    // Extract delivery day(s)
+    const dayMatch = s.match(/(Monday[^(]*)Deliver/i) || s.match(/(\w+)\s+Deliver/i);
+    const day = dayMatch ? dayMatch[1].trim().replace(/\s*\/\s*/g, '/') : '';
+    return { num, name, day };
+  }
+  return { num: 0, name: s, day: '' };
+}
+
+// ── FILTER & RENDER ───────────────────────────────────────
+// ── SYNC COMPLETED FROM SHEET ────────────────────────────────
+async function syncCompletedFromSheet() {
+  const scriptUrl = storageGet('hansen_script_url');
+  if (!scriptUrl) return;
+  try {
+    const proxyUrl = 'https://hansen-orders.troysters.workers.dev/completed-proxy?url=' + encodeURIComponent(scriptUrl);
+    const resp = await fetch(proxyUrl);
+    if (!resp.ok) return;
+    const data = await resp.json();
+    if (!data.success || !data.completed) return;
+
+    // For each green row in the sheet, mark it delivered locally if not already
+    for (const row of data.completed) {
+      // Parse the timestamp string from Apps Script (e.g. "Sat Apr 04 2026 10:03:18 GMT...")
+      // Match against allOrders by comparing parsed times
+      const sheetTime = new Date(row.timestamp);
+      const match = allOrders.find(o => {
+        const orderTime = new Date(o.timestamp);
+        return Math.abs(orderTime - sheetTime) < 60000;
+      });
+      if (match && !isDelivered(match)) {
+        // Mark as delivered with a "synced from sheet" indicator
+        storageSet(deliveredKey(match), 'synced');
+      }
+    }
+  } catch(e) {
+    console.warn('Could not sync completed from sheet:', e);
+  }
+}
+
+// ── DELIVERY TRACKING ────────────────────────────────────────
+function deliveredKey(o) {
+  return 'del_' + o.timestamp.replace(/[^0-9]/g, '');
+}
+function isDelivered(o) {
+  return !!storageGet(deliveredKey(o));
+}
+function getDeliveredAt(o) {
+  return storageGet(deliveredKey(o)) || '';
+}
+
+async function toggleDelivered(timestampKey) {
+  const o = allOrders.find(x => deliveredKey(x) === timestampKey);
+  if (!o) return;
+  const wasDone = isDelivered(o);
+  if (wasDone) {
+    try { localStorage.removeItem(deliveredKey(o)); } catch(e) {}
+    renderOrders();
+    const scriptUrl2 = storageGet('hansen_script_url');
+    if (scriptUrl2) {
+      fetch('https://hansen-orders.troysters.workers.dev/script-proxy', {
+        method: 'POST',
+        body: JSON.stringify({ url: scriptUrl2, body: JSON.stringify({ timestamp: o.timestamp, undo: true }) }),
+        headers: { 'Content-Type': 'application/json' }
+      }).catch(() => {});
+    }
+    return;
+  }
+  const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  storageSet(deliveredKey(o), now);
+  renderOrders();
+  const scriptUrl = storageGet('hansen_script_url');
+  if (scriptUrl) {
+    try {
+      const params = new URLSearchParams({ action: 'deliver', timestamp: o.timestamp, undo: 'false' });
+      const getUrl = 'https://hansen-orders.troysters.workers.dev/completed-proxy?url=' + encodeURIComponent(scriptUrl + '?' + params.toString());
+      await fetch(getUrl);
+    } catch(e) {
+      console.warn('Sync failed:', e);
+    }
+  }
+}
+
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderOrders();
+}
+
+function applyFilter(orders) {
+  const now = new Date(); now.setHours(0,0,0,0);
+  const tomorrow = new Date(now); tomorrow.setDate(tomorrow.getDate() + 1);
+  const dayAfter  = new Date(now); dayAfter.setDate(dayAfter.getDate() + 2);
+  const nextWeek  = new Date(now); nextWeek.setDate(nextWeek.getDate() + 7);
+  const past30    = new Date(now); past30.setDate(past30.getDate() - 30);
+
+  if (currentFilter === 'completed') {
+    return orders.filter(o => isDelivered(o));
+  }
+
+  return orders.filter(o => {
+    const d = o.parsedDelivDate;
+    if (!d) return false;
+    switch(currentFilter) {
+      case 'today':      return d.getTime() === now.getTime();
+      case 'tomorrow':   return d.getTime() === tomorrow.getTime();
+      case 'this-week':  return d >= now && d <= nextWeek;
+      default:           return d >= past30; // All: last 30 days + upcoming
+    }
+  });
+}
+
+function groupPallets(qty, perPallet) {
+  const ratio = Math.round((qty / perPallet) * 4) / 4;
+  const whole = Math.floor(ratio);
+  const frac = Math.round((ratio - whole) * 4) / 4;
+  const fracStr = { 0.25: '¼', 0.5: '½', 0.75: '¾' }[frac] || '';
+  if (whole === 0) return fracStr || String(ratio);
+  return String(whole) + fracStr;
+}
+
+function renderOrders() {
+  const container = document.getElementById('orders-container');
+  const filtered = applyFilter(allOrders);
+
+  if (!filtered.length) {
+    container.innerHTML = `<div class="empty-state"><div class="big">NO ORDERS</div><p>No orders found for the selected filter.</p></div>`;
+    return;
+  }
+
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // Split into active and completed
+  const active = filtered.filter(o => !isDelivered(o));
+  const completed = filtered.filter(o => isDelivered(o));
+
+  container.innerHTML = '';
+
+  // ── Active orders grouped by date ──
+  if (active.length === 0) {
+    const allDone = document.createElement('div');
+    allDone.className = 'all-done-msg';
+    allDone.innerHTML = `<div class="big">✓</div><p>All stops completed!</p>`;
+    container.appendChild(allDone);
+  } else {
+    const groups = {};
+    for (const o of active) {
+      const key = o.parsedDelivDate.toISOString().slice(0,10);
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(o);
+    }
+    for (const [key, orders] of Object.entries(groups)) {
+      const date = new Date(key + 'T12:00:00');
+      const isPast = date < today;
+      const isToday = date.getTime() === today.getTime();
+      const g20 = orders.reduce((s,o) => s+o.qty20, 0);
+      const g7  = orders.reduce((s,o) => s+o.qty7,  0);
+      const g10 = orders.reduce((s,o) => s+o.qty10, 0);
+      const totChips = [];
+      if (g20) totChips.push(`<div class="total-chip">${groupPallets(g20,120)} <span>× 20lb</span></div>`);
+      if (g7)  totChips.push(`<div class="total-chip">${groupPallets(g7,348)} <span>× 7lb</span></div>`);
+      if (g10) totChips.push(`<div class="total-chip">${Math.round(g10/5)} <span>× Bale</span></div>`);
+      const dayName = date.toLocaleDateString('en-US', {weekday:'long'});
+      const dateStr = date.toLocaleDateString('en-US', {month:'short', day:'numeric'});
+      const tag = isToday ? '<span class="today-tag">Today</span>' : isPast ? '<span class="past-tag">Past</span>' : '';
+      const groupEl = document.createElement('div');
+      groupEl.className = 'date-group';
+      groupEl.innerHTML = `
+        <div class="date-header">
+          <div class="date-header-label"><span class="day-name">${dayName}</span> · ${dateStr}${tag}</div>
+          <div class="date-totals">${totChips.join('')}</div>
+        </div>
+        ${orders.map(renderCard).join('')}
+      `;
+      container.appendChild(groupEl);
+    }
+  }
+
+  // ── Completed section ──
+  if (completed.length > 0) {
+    const section = document.createElement('div');
+    section.className = 'completed-section';
+    section.innerHTML = `
+      <div class="completed-header">
+        <span>✓ COMPLETED</span>
+        <span class="completed-count">${completed.length} stop${completed.length > 1 ? 's' : ''}</span>
+      </div>
+      ${completed.map(renderCard).join('')}
+    `;
+    container.appendChild(section);
+  }
+}
+
+function renderCard(o) {
+  const dmgItems = [];
+  if (o.dmg20) dmgItems.push(`<span class="damage-item">${o.dmg20}× 20lb bags</span>`);
+  if (o.dmg7)  dmgItems.push(`<span class="damage-item">${o.dmg7}× 7lb bags</span>`);
+  if (o.dmg10) dmgItems.push(`<span class="damage-item">${o.dmg10}× 10lb block${o.dmg10 !== 1 ? "s" : ""}</span>`);
+
+  const hasDmg = dmgItems.length > 0;
+  const hasNotes = o.notes && o.notes.trim() && o.notes.trim() !== '0';
+
+  // qty sub-labels
+  function palletCount(qty, type) {
+    const pal = { 20: 120, 7: 348 };
+    const ratio = Math.round((qty / pal[type]) * 4) / 4; // snap to nearest quarter pallet
+    const whole = Math.floor(ratio);
+    const frac = Math.round((ratio - whole) * 4) / 4;
+    const fracStr = { 0.25: '¼', 0.5: '½', 0.75: '¾' }[frac] || '';
+    if (whole === 0) return fracStr || '?';
+    return String(whole) + fracStr;
+  }
+  function palletLabel(qty, type) {
+    // rough pallet counts: 20lb=120/pallet, 7lb=348/pallet, 10lb=~25/pallet
+    if (!qty) return '';
+    const pal = { 20: 120, 7: 348, 10: 25 };
+    const p = pal[type] || 120;
+    const ratio = qty / p;
+    if (ratio >= 0.95 && ratio <= 1.05) return '1 pallet';
+    if (Math.abs(ratio - Math.round(ratio)) < 0.1) return Math.round(ratio) + ' pallets';
+    const fracs = {0.5:'½ pallet', 0.25:'¼ pallet', 0.75:'¾ pallet'};
+    const nearest = Object.keys(fracs).sort((a,b) => Math.abs(a-ratio) - Math.abs(b-ratio))[0];
+    if (Math.abs(nearest - ratio) < 0.1) return fracs[nearest];
+    return '';
+  }
+
+  const numStr = String(o.storeNum).padStart(2, '0');
+  const orderDate = o.parsedTimestamp
+    ? o.parsedTimestamp.toLocaleDateString('en-US', {month:'short', day:'numeric'})
+    : '';
+
+  const dKey = deliveredKey(o);
+  const done = isDelivered(o);
+  const doneAt = done ? getDeliveredAt(o) : '';
+  const scriptConnected = !!storageGet('hansen_script_url');
+  return `
+    <div class="order-card ${done ? 'delivered' : ''}" data-key="${dKey}">
+      <div class="card-top">
+        <div class="store-num">#${numStr}</div>
+        <div class="store-info">
+          <div class="store-name">${o.storeName}</div>
+          <div class="store-contact"><span>by</span>${o.contact || '—'} ${o.delivDay ? `<span style="margin-left:6px">·</span> <span style="margin-left:4px">${o.delivDay}s</span>` : ''}</div>
+        </div>
+        <div class="order-time">Ordered<br>${orderDate}</div>
+      </div>
+      <div class="card-qtys">
+        <div class="qty-block">
+          <div class="qty-num ${!o.qty20 ? 'zero' : ''}">${o.qty20 ? palletCount(o.qty20, 20) : '—'}</div>
+          <div class="qty-lbl">20lb Pallets</div>
+          ${o.qty20 ? `<div class="qty-sub">${o.qty20} bags</div>` : ''}
+        </div>
+        <div class="qty-block">
+          <div class="qty-num ${!o.qty7 ? 'zero' : ''}">${o.qty7 ? palletCount(o.qty7, 7) : '—'}</div>
+          <div class="qty-lbl">7lb Pallets</div>
+          ${o.qty7 ? `<div class="qty-sub">${o.qty7} bags</div>` : ''}
+        </div>
+        <div class="qty-block">
+          <div class="qty-num ${!o.qty10 ? 'zero' : ''}">${o.qty10 ? Math.round(o.qty10 / 5) : '—'}</div>
+          <div class="qty-lbl">Bales</div>
+          ${o.qty10 ? `<div class="qty-sub">${Math.round(o.qty10 / 5) === 1 ? '5 blocks' : Math.round(o.qty10 / 5) * 5 + ' blocks'}</div>` : ''}
+        </div>
+      </div>
+      ${hasNotes ? `<div class="card-notes"><span class="note-icon">📋</span>${escHtml(o.notes)}</div>` : ''}
+      ${hasDmg ? `<div class="card-damage"><span class="damage-icon">⚠</span><strong>REFUND:</strong>&nbsp;${dmgItems.join('')}</div>` : ''}
+      ${done
+        ? `<div class="delivered-badge">✓ ${doneAt === 'synced' ? 'Already completed' : 'Delivered at ' + doneAt} <button class="undo-btn" onclick="toggleDelivered('${dKey}')">✕ Unmark</button></div>`
+        : `<button class="deliver-btn" onclick="toggleDelivered('${dKey}')">✓ &nbsp;Mark Delivered</button>`
+      }
+    </div>`;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
